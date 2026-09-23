@@ -1,0 +1,361 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #0a0507;
+  color: #e8d9c8;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ---------- Розы по углам ---------- */
+.rose {
+  position: fixed;
+  width: min(38vw, 260px);
+  height: auto;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(0.3px) drop-shadow(0 0 20px rgba(139, 21, 56, 0.5));
+  animation: roseFloat 12s ease-in-out infinite;
+}
+
+.rose-tl { top: -30px;    left: -30px;    transform: rotate(-15deg); }
+.rose-tr { top: -30px;    right: -30px;   transform: rotate(15deg) scaleX(-1); }
+.rose-bl { bottom: -30px; left: -30px;    transform: rotate(15deg) scaleY(-1); }
+.rose-br { bottom: -30px; right: -30px;   transform: rotate(-15deg) scale(-1); }
+
+.rose-tl { animation-delay: 0s; }
+.rose-tr { animation-delay: 2s; }
+.rose-bl { animation-delay: 4s; }
+.rose-br { animation-delay: 6s; }
+
+@keyframes roseFloat {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.7; }
+}
+
+/* ---------- Фоновое свечение ---------- */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(139, 21, 56, 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(92, 10, 30, 0.25) 0%, transparent 80%);
+  animation: breathe 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
+}
+
+/* ---------- Частицы ---------- */
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #a8203f;
+  box-shadow: 0 0 8px 2px rgba(168, 32, 63, 0.8);
+  opacity: 0;
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ---------- Сцена ---------- */
+.stage {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+/* ---------- Конверт ---------- */
+.envelope {
+  position: relative;
+  width: min(70vw, 280px);
+  height: min(48vw, 190px);
+  background:
+    linear-gradient(145deg, #2a0710 0%, #4a0d1e 50%, #2a0710 100%);
+  border: 1px solid rgba(168, 32, 63, 0.6);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow:
+    0 0 40px rgba(139, 21, 56, 0.4),
+    inset 0 0 30px rgba(0, 0, 0, 0.6);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: pulse 2.4s ease-in-out infinite;
+  overflow: visible;
+}
+
+.envelope::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 62%;
+  background: linear-gradient(180deg, #5c0a1e 0%, #3a0712 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 6px 6px 0 0;
+  transition: transform 0.6s ease;
+  transform-origin: top;
+  z-index: 2;
+}
+
+.envelope.opened::before {
+  transform: rotateX(180deg);
+}
+
+.envelope:active {
+  transform: scale(0.96);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 40px rgba(139, 21, 56, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 70px rgba(168, 32, 63, 0.7), inset 0 0 30px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Кружево поверх конверта */
+.lace-overlay {
+  position: absolute;
+  inset: -22px;
+  width: calc(100% + 44px);
+  height: calc(100% + 44px);
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 0 10px rgba(168, 32, 63, 0.55));
+  transition: opacity 0.4s ease;
+}
+
+.envelope.opened .lace-overlay {
+  opacity: 0;
+}
+
+/* Печать — теперь картинкой */
+.wax-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  z-index: 6;
+  pointer-events: none;
+  filter: drop-shadow(0 0 14px rgba(168, 32, 63, 0.8));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.envelope.opened .wax-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+/* Подсказка */
+.envelope-hint {
+  position: absolute;
+  bottom: -44px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(232, 217, 200, 0.5);
+  animation: hint 2s ease-in-out infinite;
+  white-space: nowrap;
+  z-index: 6;
+}
+
+@keyframes hint {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+
+/* ---------- Модальное окно ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  padding: 16px;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 2, 4, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 100%;
+  transform: scale(0.9) translateY(10px);
+  opacity: 0;
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.15),
+    opacity 0.55s ease;
+}
+
+.modal.active .modal-content {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Лист бумаги с тенью */
+.letter-wrap {
+  position: relative;
+  max-width: min(86vw, 440px);
+  max-height: 74vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letter-wrap::before {
+  /* мягкая тень под листом */
+  content: '';
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -18px;
+  height: 40px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.4) 45%,
+    transparent 75%
+  );
+  filter: blur(10px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.letter {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 74vh;
+  width: auto;
+  height: auto;
+  display: block;
+  border-radius: 3px;
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.7),
+    0 8px 18px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(139, 21, 56, 0.35);
+  animation: letterIn 0.9s cubic-bezier(0.2, 0.9, 0.3, 1) 0.15s both;
+}
+
+@keyframes letterIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-caption {
+  font-size: 13px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(232, 217, 200, 0.55);
+  text-align: center;
+}
+
+/* Кнопка закрытия */
+.modal-close {
+  position: absolute;
+  top: -46px;
+  right: 0;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 32, 63, 0.6);
+  background: rgba(26, 5, 9, 0.9);
+  color: rgba(232, 217, 200, 0.85);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.modal-close:hover,
+.modal-close:active {
+  border-color: #a8203f;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(168, 32, 63, 0.75);
+}
+
+/* ---------- Адаптация ---------- */
+@media (max-height: 700px) {
+  .letter-wrap { max-height: 66vh; }
+  .letter { max-height: 66vh; }
+  .modal-close { top: -40px; width: 36px; height: 36px; font-size: 20px; }
+}
+
+@media (max-width: 380px) {
+  .rose { width: min(46vw, 200px); opacity: 0.4; }
+  .envelope-hint { font-size: 11px; letter-spacing: 3px; bottom: -38px; }
+  .wax-seal { width: 54px; height: 54px; }
+  .lace-overlay { inset: -16px; width: calc(100% + 32px); height: calc(100% + 32px); }
+}
